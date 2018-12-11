@@ -166,6 +166,8 @@ class TraceMiddleware(InstrumentationMixin):
 
                 span.set_tag(http.STATUS_CODE, response.status_code)
                 span = _set_auth_tags(span, request)
+                propagator = HTTPPropagator()
+                propagator.inject(span.context, response)
                 span.finish()
         except Exception:
             log.debug("error tracing request", exc_info=True)
